@@ -44,7 +44,6 @@ The project is structured into focused modules:
 ## Building
 
 ```bash
-npm run build   # Compile TypeScript
 npm run dev     # Run without building (uses tsx)
 npm start       # Run built version
 ```

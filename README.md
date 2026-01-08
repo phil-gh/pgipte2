@@ -13,7 +13,7 @@ A TypeScript rewrite of the PoE price reduction tool, providing automated price 
 ```bash
 cd ~/src/pgipte2
 npm install
-npm run build
+npm run dev
 ```
 
 ## Usage

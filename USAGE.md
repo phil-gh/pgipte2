@@ -5,27 +5,19 @@
 ```bash
 cd ~/src/pgipte2
 npm install
-npm run build
 ```
 
 ## Running the Application
 
-### Development Mode (with auto-reload)
 ```bash
 npm run dev
-```
-
-### Production Mode
-```bash
-npm run build
-npm start
 ```
 
 ## Workflow in Path of Exile 2
 
 ### Initial Setup
 
-1. Start the application: `npm start`
+1. Start the application: `npm run dev`
 2. You'll see:
 ```
 =================================
@@ -111,11 +103,10 @@ Changes take effect immediately.
 - Check that the clipboard contains only the price number
 - Ensure you're clicking in the correct field
 
-### Build errors
+### Installation issues
 ```bash
 npm run clean
 npm install
-npm run build
 ```
 
 ## Tips

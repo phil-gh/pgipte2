@@ -6,10 +6,9 @@
 # 1. Install
 cd ~/src/pgipte2
 npm install
-npm run build
 
 # 2. Run
-npm start
+npm run dev
 
 # 3. Use
 Press F2 - Settings
@@ -28,7 +27,6 @@ That's it! The tool runs in the background.
 ```bash
 cd ~/src/pgipte2
 npm install
-npm run build
 ./setup-linux-hotkeys.sh
 ```
 
