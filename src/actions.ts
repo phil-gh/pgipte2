@@ -34,8 +34,7 @@ async function copyPrice(): Promise<number | null> {
     
     const price = parsePrice(text);
     if (!price || price < 1) {
-      console.log('No valid price found. You may need to select and copy the price manually first.');
-      console.log('Hint: Select the price in the dialog, then run this command again.');
+      console.log('No valid price found. Mouse over a priced item in your market. It might be price-locked, in which case you cannot change its price.');
       return null;
     }
     
