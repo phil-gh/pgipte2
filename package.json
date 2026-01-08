@@ -9,13 +9,21 @@
     "start": "node dist/index.js",
     "clean": "rm -rf dist"
   },
-  "keywords": ["poe", "path-of-exile", "trading", "automation"],
+  "keywords": [
+    "poe",
+    "path-of-exile",
+    "trading",
+    "automation"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@jitsi/robotjs": "^0.6.21",
+    "@types/inquirer": "^9.0.9",
     "clipboardy": "^4.0.0",
+    "conf": "^15.0.2",
+    "inquirer": "^13.1.0",
     "node-global-key-listener": "^0.1.1"
   },
   "devDependencies": {
