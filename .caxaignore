@@ -1,0 +1,6 @@
+.git
+.vscode
+dist
+*.md
+test-*.js
+*.exe
