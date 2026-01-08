@@ -1,13 +1,15 @@
 {
   "name": "pgipte2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Price reduction tool for Path of Exile 2",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "tsc",
+    "build": "tsc --noEmit false --skipLibCheck",
     "start": "node dist/index.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "package": "powershell -Command \"Remove-Item -Path 'node_modules/node-global-key-listener/bin/MacKeyServer' -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'node_modules/node-global-key-listener/bin/*.dylib' -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'pgipte2.exe' -Force -ErrorAction SilentlyContinue; npx caxa --input . --output pgipte2.exe --exclude '.git' --exclude '*.md' --exclude '*.exe' --exclude 'dist' -- '{{caxa}}/node_modules/.bin/node' '{{caxa}}/node_modules/tsx/dist/cli.mjs' '{{caxa}}/src/index.ts'\"",
+    "release": "powershell -Command \"$version = (Get-Content package.json | ConvertFrom-Json).version; & 'C:\\Program Files\\GitHub CLI\\gh' release create v$version pgipte2.exe --title v$version --notes ('Release v' + $version + ' - Standalone executable for Windows')\""
   },
   "keywords": [
     "poe",
@@ -24,12 +26,13 @@
     "clipboardy": "^4.0.0",
     "conf": "^15.0.2",
     "inquirer": "^13.1.0",
-    "node-key-sender": "^1.0.11"
+    "node-key-sender": "^1.0.11",
+    "tsx": "^4.21.0"
   },
   "devDependencies": {
-    "@types/node": "^22.10.5",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "@types/node": "^20.19.27",
+    "caxa": "^3.0.1",
+    "typescript": "5.3"
   },
   "optionalDependencies": {
     "node-global-key-listener": "^0.3.0"

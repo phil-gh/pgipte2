@@ -19,14 +19,14 @@ async function copyPrice(): Promise<number | null> {
   
   // Right-click to open price dialog (works on Wayland)
   robot.mouseClick('right');
-  await sleep(300);
+  await sleep(50);
 
   // On Wayland, we can't use Ctrl+C, but the game might auto-select the price
   // Let's try to read what's already in clipboard, or use wl-paste
   if (isWayland()) {
     console.log('Using Wayland clipboard (wl-paste)...');
     // Wait a bit for the dialog to appear and potentially copy
-    await sleep(300);
+    await sleep(50);
     
     // Read current clipboard using wl-paste
     const text = await readClipboard();
@@ -43,7 +43,7 @@ async function copyPrice(): Promise<number | null> {
   } else {
     // On X11/Windows, use Ctrl+C
     robot.keyTap('c', ['control']);
-    await sleep(600);
+    await sleep(50);
     
     const text = await readClipboard();
     const price = parsePrice(text);
