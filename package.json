@@ -24,11 +24,14 @@
     "clipboardy": "^4.0.0",
     "conf": "^15.0.2",
     "inquirer": "^13.1.0",
-    "node-global-key-listener": "^0.1.1"
+    "node-key-sender": "^1.0.11"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
+  },
+  "optionalDependencies": {
+    "node-global-key-listener": "^0.3.0"
   }
 }
