@@ -47,43 +47,102 @@ case "$DE" in
         echo "Setting up KDE Plasma shortcuts..."
         echo ""
         
-        # Create kglobalshortcutsrc entries
-        KCONFIG="$HOME/.config/kglobalshortcutsrc"
-        
-        # Backup existing config
-        if [ -f "$KCONFIG" ]; then
-            cp "$KCONFIG" "$KCONFIG.backup.$(date +%s)"
-            echo "✓ Backed up existing config"
+        # Detect which kwriteconfig version is available
+        KWRITE_CMD=""
+        if command -v kwriteconfig6 &> /dev/null; then
+            KWRITE_CMD="kwriteconfig6"
+            echo "✓ Found kwriteconfig6"
+        elif command -v kwriteconfig5 &> /dev/null; then
+            KWRITE_CMD="kwriteconfig5"
+            echo "✓ Found kwriteconfig5"
         fi
         
-        # Check if kwriteconfig5 is available
-        if command -v kwriteconfig5 &> /dev/null; then
-            echo "Using kwriteconfig5 to set shortcuts..."
+        if [ -n "$KWRITE_CMD" ]; then
+            echo "Attempting to configure KDE shortcuts..."
+            echo ""
             
-            # Note: KDE shortcuts are complex and usually need manual setup
+            # KDE uses kglobalshortcutsrc for shortcuts
+            # We'll create custom shortcuts using kwriteconfig
+            
+            # Create a custom shortcuts group
+            $KWRITE_CMD --file kglobalshortcutsrc --group "pgipte2.desktop" --key "_k_friendly_name" "PGIPTE2"
+            
+            # F2 - Settings
+            $KWRITE_CMD --file kglobalshortcutsrc --group "pgipte2.desktop" --key "pgipte2-settings" "F2,none,PGIPTE2 Settings"
+            
+            # F3 - Reduce
+            $KWRITE_CMD --file kglobalshortcutsrc --group "pgipte2.desktop" --key "pgipte2-reduce" "F3,none,PGIPTE2 Reduce Price"
+            
+            # F4 - Convert
+            $KWRITE_CMD --file kglobalshortcutsrc --group "pgipte2.desktop" --key "pgipte2-convert" "F4,none,PGIPTE2 Convert Currency"
+            
+            # Create desktop file for the actions
+            DESKTOP_FILE="$HOME/.local/share/applications/pgipte2.desktop"
+            mkdir -p "$HOME/.local/share/applications"
+            
+            cat > "$DESKTOP_FILE" << EOF
+[Desktop Entry]
+Type=Application
+Name=PGIPTE2
+Exec=$NODE_BIN $SCRIPT_DIR/dist/index.js
+Icon=utilities-terminal
+Categories=Utility;
+NoDisplay=true
+
+[Desktop Action settings]
+Name=Settings
+Exec=$CMD_F2
+
+[Desktop Action reduce]
+Name=Reduce Price
+Exec=$CMD_F3
+
+[Desktop Action convert]
+Name=Convert Currency
+Exec=$CMD_F4
+EOF
+            
+            echo "✓ Created desktop file: $DESKTOP_FILE"
             echo ""
-            echo "⚠️  KDE shortcuts require manual configuration."
+            echo "⚠️  KDE shortcut configuration attempted, but manual setup recommended."
             echo ""
-            echo "Please follow these steps:"
+            echo "To complete setup in KDE:"
             echo "1. Open System Settings"
             echo "2. Go to Shortcuts → Custom Shortcuts"
             echo "3. Click 'Edit' → 'New' → 'Global Shortcut' → 'Command/URL'"
             echo "4. Create three shortcuts:"
             echo ""
-            echo "   Shortcut 1:"
+            echo "   Shortcut 1 (F2 - Settings):"
+            echo "   - Name: PGIPTE2 Settings"
             echo "   - Trigger: F2"
             echo "   - Command: $CMD_F2"
             echo ""
-            echo "   Shortcut 2:"
+            echo "   Shortcut 2 (F3 - Reduce):"
+            echo "   - Name: PGIPTE2 Reduce Price"
             echo "   - Trigger: F3"
             echo "   - Command: $CMD_F3"
             echo ""
-            echo "   Shortcut 3:"
+            echo "   Shortcut 3 (F4 - Convert):"
+            echo "   - Name: PGIPTE2 Convert Currency"
             echo "   - Trigger: F4"
             echo "   - Command: $CMD_F4"
             echo ""
+            echo "Alternative: Use Meta+F2, Meta+F3, Meta+F4 if F-keys conflict"
+            echo ""
         else
-            echo "kwriteconfig5 not found. Manual configuration required."
+            echo "⚠️  Neither kwriteconfig5 nor kwriteconfig6 found."
+            echo ""
+            echo "Manual configuration required:"
+            echo "1. Open System Settings"
+            echo "2. Go to Shortcuts → Custom Shortcuts"
+            echo "3. Click 'Edit' → 'New' → 'Global Shortcut' → 'Command/URL'"
+            echo "4. Create shortcuts for F2, F3, F4 with the commands shown below"
+            echo ""
+            echo "Commands:"
+            echo "  F2: $CMD_F2"
+            echo "  F3: $CMD_F3"
+            echo "  F4: $CMD_F4"
+            echo ""
         fi
         ;;
         
@@ -96,7 +155,7 @@ case "$DE" in
             SCHEMA="org.gnome.settings-daemon.plugins.media-keys"
             
             # Get current custom keybindings
-            CUSTOM_KEYS=$(gsettings get $SCHEMA custom-keybindings)
+            CURRENT_KEYS=$(gsettings get $SCHEMA custom-keybindings)
             
             # Add our custom shortcuts
             gsettings set $SCHEMA.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/pgipte2-f2/ name "PGIPTE2 Settings"
@@ -131,8 +190,6 @@ case "$DE" in
     xfce)
         echo "Setting up XFCE shortcuts..."
         echo ""
-        
-        XFCE_CONFIG="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml"
         
         if command -v xfconf-query &> /dev/null; then
             xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/F2" -n -t string -s "$CMD_F2"
