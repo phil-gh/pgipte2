@@ -1,6 +1,7 @@
 import robot from '@jitsi/robotjs';
 import { configManager } from './config.js';
-import { readPrice, writePrice } from './clipboard.js';
+import { parsePrice } from './clipboard.js';
+import { automation, readClipboard, writeClipboard, isWayland } from './wayland-automation.js';
 
 /**
  * Delay helper
@@ -14,36 +15,68 @@ function sleep(ms: number): Promise<void> {
  * Returns null if no valid price found
  */
 async function copyPrice(): Promise<number | null> {
-  // Right-click to open price dialog
+  console.log(`Platform: ${isWayland() ? 'Wayland' : 'X11/Windows'}`);
+  
+  // Right-click to open price dialog (works on Wayland)
   robot.mouseClick('right');
   await sleep(300);
 
-  // Clear clipboard and copy
-  // Note: We can't actually clear the clipboard easily, so we just copy
-  robot.keyTap('c', ['control']);
-  await sleep(600); // Wait for clipboard
-
-  // Read and parse price
-  const price = await readPrice();
-  
-  if (!price || price < 1) {
-    console.log('Failed to read valid price from clipboard');
-    return null;
+  // On Wayland, we can't use Ctrl+C, but the game might auto-select the price
+  // Let's try to read what's already in clipboard, or use wl-paste
+  if (isWayland()) {
+    console.log('Using Wayland clipboard (wl-paste)...');
+    // Wait a bit for the dialog to appear and potentially copy
+    await sleep(300);
+    
+    // Read current clipboard using wl-paste
+    const text = await readClipboard();
+    console.log(`Read from clipboard: "${text}"`);
+    
+    const price = parsePrice(text);
+    if (!price || price < 1) {
+      console.log('No valid price found. You may need to select and copy the price manually first.');
+      console.log('Hint: Select the price in the dialog, then run this command again.');
+      return null;
+    }
+    
+    return price;
+  } else {
+    // On X11/Windows, use Ctrl+C
+    robot.keyTap('c', ['control']);
+    await sleep(600);
+    
+    const text = await readClipboard();
+    const price = parsePrice(text);
+    
+    if (!price || price < 1) {
+      console.log('Failed to read valid price from clipboard');
+      return null;
+    }
+    
+    return price;
   }
-
-  return price;
 }
 
 /**
  * Paste a value and confirm with Enter
  */
 async function pasteAndConfirm(value: number): Promise<void> {
-  await writePrice(value);
+  // Write to clipboard
+  await writeClipboard(value.toString());
   await sleep(50);
   
-  robot.keyTap('v', ['control']);
+  if (isWayland()) {
+    // On Wayland, type the string directly since Ctrl+V doesn't work
+    console.log('Typing value directly (Wayland)...');
+    robot.typeString(value.toString());
+  } else {
+    // On X11/Windows, use Ctrl+V
+    robot.keyTap('v', ['control']);
+  }
+  
   await sleep(50);
   
+  // Enter works on all platforms
   robot.keyTap('enter');
 }
 
@@ -90,13 +123,21 @@ export async function handleCurrencyConversion(): Promise<void> {
 
   console.log(`Original: ${price}, Rate: ${rate}, New: ${newValue}`);
   
-  // Paste the value
-  await writePrice(newValue);
+  // Write to clipboard
+  await writeClipboard(newValue.toString());
   await sleep(50);
-  robot.keyTap('v', ['control']);
+  
+  if (isWayland()) {
+    // Type directly on Wayland
+    robot.typeString(newValue.toString());
+  } else {
+    // Use Ctrl+V on X11/Windows
+    robot.keyTap('v', ['control']);
+  }
+  
   await sleep(50);
 
-  // Special UI navigation
+  // Special UI navigation (works on all platforms)
   robot.keyTap('tab');
   await sleep(50);
   
