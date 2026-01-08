@@ -30,28 +30,30 @@ The tool will listen for global hotkeys (F2, F3, F4) in the background.
 
 Due to Wayland/security restrictions, global hotkeys require system integration.
 
-**Option 1: Command-line mode (testing)**
+#### 🚀 Quick Automated Setup
+
+```bash
+cd ~/src/pgipte2
+./setup-linux-hotkeys.sh
+```
+
+This will automatically configure F2/F3/F4 hotkeys for your desktop environment (GNOME, KDE, XFCE, Sway, i3, etc.).
+
+#### 📖 Detailed Instructions
+
+See [LINUX_SETUP.md](LINUX_SETUP.md) for:
+- Complete manual setup for all DEs
+- Troubleshooting tips
+- Alternative keybinding options
+- Step-by-step screenshots
+
+#### Alternative: Command-line mode (for testing)
+
 ```bash
 npm start -- --settings   # Configure settings
 npm start -- --reduce     # Test F3 (price reduction)
 npm start -- --convert    # Test F4 (currency conversion)
 ```
-
-**Option 2: Desktop environment keyboard shortcuts**
-
-Bind the following commands to your desired keys:
-- F2: `node ~/src/pgipte2/dist/index.js --settings`
-- F3: `node ~/src/pgipte2/dist/index.js --reduce`
-- F4: `node ~/src/pgipte2/dist/index.js --convert`
-
-Instructions for popular DEs:
-- **KDE**: System Settings → Shortcuts → Custom Shortcuts
-- **GNOME**: Settings → Keyboard → Custom Shortcuts
-- **XFCE**: Settings → Keyboard → Application Shortcuts
-
-**Option 3: Use X11**
-
-If you're on Wayland, switch to X11 session for native global hotkey support.
 
 ## Configuration
 
@@ -70,8 +72,8 @@ Settings are stored in a JSON configuration file with the following options:
 ## Requirements
 
 - Node.js 18+
-- **Windows**: Full global hotkey support
-- **Linux**: Requires X11 or DE keyboard shortcuts
+- **Windows**: Full global hotkey support ✅
+- **Linux**: Requires desktop environment integration (see [LINUX_SETUP.md](LINUX_SETUP.md)) ⚙️
 
 ## Platform Support
 
@@ -79,14 +81,27 @@ Settings are stored in a JSON configuration file with the following options:
 |----------|----------------|--------|
 | Windows  | ✅ Native     | Fully supported |
 | Linux X11| ✅ Native     | Supported |
-| Linux Wayland | ⚠️ Requires DE integration | Use CLI mode or DE shortcuts |
+| Linux Wayland | ✅ Via DE shortcuts | **Use setup script** |
 | macOS    | ⚠️ Untested   | May work with permissions |
+
+## Quick Links
+
+- **[LINUX_SETUP.md](LINUX_SETUP.md)** - Detailed Linux hotkey setup guide
+- **[USAGE.md](USAGE.md)** - How to use in Path of Exile 2
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Developer documentation
+- **[PLATFORM_NOTES.md](PLATFORM_NOTES.md)** - Platform-specific details
 
 ## Troubleshooting
 
 ### Linux: "OS is not supported" error
 
-This is expected on Wayland. Use command-line mode or configure DE shortcuts.
+This is expected on Wayland. Run the setup script:
+
+```bash
+./setup-linux-hotkeys.sh
+```
+
+Or see [LINUX_SETUP.md](LINUX_SETUP.md) for manual configuration.
 
 ### Windows: Hotkeys not working
 
@@ -97,9 +112,3 @@ This is expected on Wayland. Use command-line mode or configure DE shortcuts.
 ## Original Project
 
 Based on [pgipte](https://github.com/phil-gh/pgipte) by phil-gh
-
-## Documentation
-
-- [USAGE.md](USAGE.md) - Detailed usage guide
-- [DEVELOPMENT.md](DEVELOPMENT.md) - Development documentation
-- [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Project overview
