@@ -1,0 +1,26 @@
+{
+  "name": "pgipte2",
+  "version": "1.0.0",
+  "description": "Price reduction tool for Path of Exile 2",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["poe", "path-of-exile", "trading", "automation"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@jitsi/robotjs": "^0.6.21",
+    "clipboardy": "^4.0.0",
+    "node-global-key-listener": "^0.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
