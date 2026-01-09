@@ -60,6 +60,7 @@ npm start -- --convert    # Test F4 (currency conversion)
 Settings are stored in a JSON configuration file with the following options:
 - `percent`: Percentage to reduce prices by (default: 10)
 - `rate`: Currency conversion rate (default: 130)
+- `uiDelayMs`: Delay in milliseconds between UI interactions (default: 50, range: 0-5000)
 
 ## Hotkeys
 
